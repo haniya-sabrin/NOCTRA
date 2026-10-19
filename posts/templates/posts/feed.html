@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NOCTRA | Social Feed</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --background: #08070d;
+            --surface: #12101b;
+            --border: #302440;
+            --purple: #a855f7;
+            --lavender: #d8b4fe;
+            --text: #f5f0ff;
+            --muted: #a49ab5;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(ellipse at top, #211034 0%, transparent 45%),
+                var(--background);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* NAVIGATION */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(12, 10, 18, 0.94);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            color: var(--lavender);
+            font-size: 27px;
+            font-weight: 800;
+            letter-spacing: 5px;
+            text-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #ddd3ec;
+            text-decoration: none;
+            font-size: 13px;
+            transition: 0.25s;
+        }
+
+        nav a:hover {
+            color: var(--lavender);
+        }
+
+        /* MAIN LAYOUT */
+
+        .container {
+            width: 100%;
+            max-width: 760px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            margin-bottom: 28px;
+        }
+
+        .welcome h2 {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .welcome h2 span {
+            color: var(--lavender);
+        }
+
+        .welcome p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* CARDS */
+
+        .composer,
+        .post {
+            background: linear-gradient(
+                145deg,
+                rgba(25, 21, 37, 0.98),
+                rgba(15, 13, 23, 0.98)
+            );
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.18);
+            transition: border-color 0.25s;
+        }
+
+        .composer:hover,
+        .post:hover {
+            border-color: #67418d;
+        }
+
+        .composer h3 {
+            color: var(--lavender);
+            font-size: 17px;
+            margin-bottom: 17px;
+        }
+
+        /* CREATE POST */
+
+        textarea {
+            width: 100%;
+            min-height: 115px;
+            resize: vertical;
+            background: #0b0911;
+            color: var(--text);
+            border: 1px solid #40314f;
+            border-radius: 12px;
+            padding: 16px;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.6;
+            outline: none;
+            transition: 0.25s;
+        }
+
+        textarea:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.12);
+        }
+
+        textarea::placeholder {
+            color: #81758f;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .publish-button {
+            margin-top: 15px;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #c084fc, #9333ea);
+            color: white;
+            font-weight: 700;
+            font-size: 13px;
+            box-shadow: 0 5px 18px rgba(168, 85, 247, 0.2);
+            transition: 0.25s;
+        }
+
+        .publish-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 24px rgba(168, 85, 247, 0.4);
+        }
+
+        /* FEED HEADING */
+
+        .feed-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 36px 0 20px;
+        }
+
+        .feed-heading h2 {
+            font-size: 21px;
+        }
+
+        .feed-heading span {
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        /* POST HEADER */
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin-bottom: 20px;
+        }
+
+        .post-profile-pic,
+        .post-profile-placeholder {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid var(--purple);
+            flex-shrink: 0;
+        }
+
+        .post-profile-pic {
+            object-fit: cover;
+        }
+
+        .post-profile-placeholder {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #291447;
+            color: var(--lavender);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .post-author {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .username-link {
+            color: var(--lavender);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .username-link:hover {
+            color: white;
+            text-shadow: 0 0 10px var(--purple);
+        }
+
+        .member-label {
+            display: block;
+            margin-top: 5px;
+            color: #9a7bbb;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+        }
+
+        /* POST CONTENT */
+
+        .post-content {
+            color: #e9e1f2;
+            font-size: 15px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            margin-bottom: 22px;
+        }
+
+        .post-divider {
+            height: 1px;
+            background: linear-gradient(
+                to right,
+                transparent,
+                #40314f,
+                transparent
+            );
+            margin-bottom: 16px;
+        }
+
+        /* LIKE SECTION */
+
+        .like-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .like-section form {
+            margin: 0;
+        }
+
+        .like-button {
+            border: 1px solid #49305d;
+            border-radius: 10px;
+            background: #21172e;
+            color: var(--lavender);
+            padding: 10px 17px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: 0.25s;
+        }
+
+        .like-button:hover {
+            background: #39204e;
+            border-color: var(--purple);
+            transform: translateY(-1px);
+        }
+
+        .like-count {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* COMMENTS */
+
+        .comments-section {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .comments-heading {
+            color: var(--lavender);
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+
+        .comment-card {
+            background: #0d0b14;
+            border: 1px solid #292036;
+            border-radius: 10px;
+            padding: 13px;
+            margin-bottom: 12px;
+        }
+
+        .comment-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .comment-username {
+            color: #c084fc;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .comment-username:hover {
+            color: white;
+        }
+
+        .comment-date {
+            color: #81758f;
+            font-size: 11px;
+        }
+
+        .comment-content {
+            color: #e9e1f2;
+            font-size: 13px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .no-comments {
+            color: #9386a5;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .comment-form input {
+            flex: 1;
+            min-width: 0;
+            background: #0b0911;
+            border: 1px solid #40314f;
+            border-radius: 9px;
+            padding: 12px;
+            color: white;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .comment-form input:focus {
+            border-color: var(--purple);
+        }
+
+        .comment-form input::placeholder {
+            color: #81758f;
+        }
+
+        .comment-submit-button {
+            background: linear-gradient(135deg, #c084fc, #9333ea);
+            color: white;
+            border: none;
+            border-radius: 9px;
+            padding: 10px 15px;
+            font-weight: bold;
+            font-size: 12px;
+            transition: 0.25s;
+        }
+
+        .comment-submit-button:hover {
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.35);
+        }
+
+        .delete-comment-form {
+            margin-top: 8px;
+        }
+
+        .delete-comment-button {
+            background: transparent;
+            border: none;
+            color: #e879a9;
+            font-size: 11px;
+            padding: 4px 0;
+        }
+
+        .delete-comment-button:hover {
+            color: #ffb4d0;
+        }
+
+        /* EMPTY FEED */
+
+        .empty {
+            text-align: center;
+            padding: 45px 25px;
+        }
+
+        .empty-icon {
+            font-size: 35px;
+            margin-bottom: 15px;
+        }
+
+        .empty h3 {
+            color: var(--lavender);
+            margin-bottom: 10px;
+        }
+
+        .empty p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            color: #716780;
+            padding: 25px 15px 35px;
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+            header {
+                padding: 17px 18px;
+                align-items: flex-start;
+            }
+
+            .logo {
+                font-size: 21px;
+                letter-spacing: 3px;
+            }
+
+            nav {
+                justify-content: flex-end;
+                gap: 12px;
+            }
+
+            nav a {
+                font-size: 11px;
+            }
+
+            .container {
+                margin-top: 28px;
+                padding: 0 14px;
+            }
+
+            .composer,
+            .post {
+                padding: 18px;
+                border-radius: 14px;
+            }
+
+            .welcome h2 {
+                font-size: 23px;
+            }
+
+            .comment-form {
+                flex-wrap: wrap;
+            }
+
+            .comment-form input {
+                width: 100%;
+                flex-basis: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1 class="logo">NOCTRA</h1>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/explore/">Explore</a>
+        <a href="/notifications/">🔔 Notifications</a>
+        <a href="/logout/">Log Out</a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="welcome">
+        <h2>Your world, <span>your voice.</span></h2>
+        <p>Welcome to your corner of the NOCTRA community.</p>
+    </section>
+
+    <!-- CREATE POST -->
+
+    <section class="composer">
+        <h3>✦ Share something with the community</h3>
+
+        <form method="POST" action="{% url 'feed' %}">
+            {% csrf_token %}
+
+            <textarea
+                name="content"
+                placeholder="What's on your mind? Let it out..."
+                maxlength="5000"
+                required
+            ></textarea>
+
+            <button type="submit" class="publish-button">
+                Publish Post ✨
+            </button>
+        </form>
+    </section>
+
+    <!-- COMMUNITY FEED -->
+
+    <div class="feed-heading">
+        <h2>Community Feed</h2>
+        <span>✦ THE LATEST</span>
+    </div>
+
+    {% for post in posts %}
+
+        <article class="post">
+
+            <!-- POST AUTHOR -->
+
+            <div class="post-header">
+
+                {% if post.author.profile.profile_picture and post.author.profile.profile_picture.name != "profile_pictures/default.png" %}
+
+                    <img
+                        src="{{ post.author.profile.profile_picture.url }}"
+                        alt="Profile picture"
+                        class="post-profile-pic"
+                    >
+
+                {% else %}
+
+                    <div class="post-profile-placeholder">
+                        {{ post.author.username|first|upper }}
+                    </div>
+
+                {% endif %}
+
+                <div class="post-author">
+
+                    <a
+                        href="{% url 'user_profile' post.author.username %}"
+                        class="username-link"
+                    >
+                        {{ post.author.username }}
+                    </a>
+
+                    <small class="member-label">NOCTRA MEMBER</small>
+
+                </div>
+
+            </div>
+
+            <!-- POST CONTENT -->
+
+            <p class="post-content">{{ post.content }}</p>
+
+            <div class="post-divider"></div>
+
+            <!-- LIKE BUTTON -->
+
+            <div class="like-section">
+
+                <form method="POST" action="{% url 'like_post' post.id %}">
+                    {% csrf_token %}
+
+                    <button type="submit" class="like-button">
+                        {% if post.user_has_liked %}
+                            💔 Unlike
+                        {% else %}
+                            ❤️ Like
+                        {% endif %}
+                    </button>
+                </form>
+
+                <span class="like-count">
+                    ❤️ {{ post.likes.count }} likes
+                </span>
+
+                <span class="like-count">
+                    💬 {{ post.comments.count }} comments
+                </span>
+
+            </div>
+
+            <!-- COMMENTS SECTION -->
+
+            <section class="comments-section">
+
+                <h4 class="comments-heading">💬 Comments</h4>
+
+                {% for comment in post.comments.all %}
+
+                    <div class="comment-card">
+
+                        <div class="comment-info">
+
+                            <a
+                                href="{% url 'user_profile' comment.author.username %}"
+                                class="comment-username"
+                            >
+                                @{{ comment.author.username }}
+                            </a>
+
+                            <span class="comment-date">
+                                {{ comment.created_at|date:"d M, H:i" }}
+                            </span>
+
+                        </div>
+
+                        <p class="comment-content">{{ comment.content }}</p>
+
+                        {% if comment.author == request.user %}
+
+                            <form
+                                method="POST"
+                                action="{% url 'delete_comment' comment.id %}"
+                                class="delete-comment-form"
+                            >
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="delete-comment-button"
+                                >
+                                    🗑️ Delete
+                                </button>
+                            </form>
+
+                        {% endif %}
+
+                    </div>
+
+                {% empty %}
+
+                    <p class="no-comments">
+                        No comments yet. Start the conversation! 💜
+                    </p>
+
+                {% endfor %}
+
+                <!-- ADD COMMENT -->
+
+                <form
+                    method="POST"
+                    action="{% url 'add_comment' post.id %}"
+                    class="comment-form"
+                >
+                    {% csrf_token %}
+
+                    <input
+                        type="text"
+                        name="content"
+                        maxlength="1000"
+                        placeholder="Write a comment..."
+                        required
+                    >
+
+                    <button type="submit" class="comment-submit-button">
+                        Send ✨
+                    </button>
+
+                </form>
+
+            </section>
+
+        </article>
+
+    {% empty %}
+
+        <div class="post empty">
+
+            <div class="empty-icon">🌙</div>
+
+            <h3>Your feed starts here</h3>
+
+            <p>
+                No posts yet. Be the first to share something
+                with the NOCTRA community!
+            </p>
+
+        </div>
+
+    {% endfor %}
+
+</main>
+
+<footer>
+    NOCTRA · YOUR WORLD AFTER DARK
+</footer>
+
+</body>
+</html>

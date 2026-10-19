@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ profile_user.username }} | NOCTRA</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #090711;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            padding: 18px 8%;
+            background: #151122;
+            border-bottom: 1px solid #382052;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h1 {
+            color: #bb86fc;
+            margin: 0;
+            letter-spacing: 3px;
+        }
+
+        nav a {
+            color: #d8b4fe;
+            text-decoration: none;
+            margin-left: 18px;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 92%;
+            margin: 35px auto;
+        }
+
+        .profile-card {
+            background: #151122;
+            border: 1px solid #49306a;
+            border-radius: 18px;
+            padding: 35px;
+            text-align: center;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #a855f7;
+            margin-bottom: 15px;
+        }
+
+        .placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #321750;
+            color: #e9d5ff;
+            border: 3px solid #a855f7;
+            font-size: 48px;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+
+        .username {
+            margin: 8px 0;
+            font-size: 28px;
+        }
+
+        .bio {
+            color: #c4b5d8;
+            margin: 15px auto;
+            max-width: 500px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            margin: 25px 0;
+        }
+
+        .stats strong {
+            display: block;
+            font-size: 22px;
+            color: #c084fc;
+        }
+
+        .stats span {
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .button {
+            display: inline-block;
+            background: #8b45e9;
+            color: white;
+            padding: 11px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin: 5px;
+        }
+
+        .button:hover {
+            background: #a66aff;
+        }
+
+        .section-title {
+            color: #d8b4fe;
+            margin: 35px 0 20px;
+        }
+
+        .post-card {
+            background: #151122;
+            border: 1px solid #382052;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+
+        .post-date {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .post-content {
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .empty {
+            text-align: center;
+            color: #aaa;
+            padding: 25px;
+            background: #151122;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 500px) {
+            .profile-card {
+                padding: 25px 15px;
+            }
+
+            nav {
+                padding: 16px 4%;
+            }
+
+            nav a {
+                margin-left: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <h1>NOCTRA</h1>
+
+        <div>
+            <a href="/feed/">Feed</a>
+            {% if request.user.is_authenticated %}
+                <a href="/edit-profile/">Edit Profile</a>
+                <a href="/logout/">Logout</a>
+            {% else %}
+                <a href="/login/">Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <section class="profile-card">
+
+            {% if profile.profile_picture and profile.profile_picture.name != "profile_pictures/default.png" %}
+                <img
+                    src="{{ profile.profile_picture.url }}"
+                    alt="Profile picture"
+                    class="profile-pic"
+                >
+            {% else %}
+                <div class="placeholder">
+                    {{ profile_user.username|first|upper }}
+                </div>
+            {% endif %}
+
+            <h2 class="username">@{{ profile_user.username }}</h2>
+
+            {% if profile.bio %}
+                <p class="bio">{{ profile.bio }}</p>
+            {% else %}
+                <p class="bio">This user hasn't written a bio yet.</p>
+            {% endif %}
+
+            <div class="stats">
+                <div>
+                    <strong>{{ post_count }}</strong>
+                    <span>Posts</span>
+                </div>
+            </div>
+<!-- Follow Statistics -->
+<div class="stats">
+    <div>
+        <strong>{{ post_count }}</strong>
+        <span>Posts</span>
+    </div>
+
+    <div>
+        <strong>{{ follower_count }}</strong>
+        <span>Followers</span>
+    </div>
+
+    <div>
+        <strong>{{ following_count }}</strong>
+        <span>Following</span>
+    </div>
+</div>
+
+<!-- Follow / Unfollow Button -->
+{% if request.user.is_authenticated and request.user.id != profile_user.id %}
+    <form method="POST" action="{% url 'toggle_follow' profile_user.username %}">
+        {% csrf_token %}
+
+        <button type="submit" class="button">
+            {% if is_following %}
+                Unfollow
+            {% else %}
+                Follow
+            {% endif %}
+        </button>
+    </form>
+{% endif %}
+            {% if request.user.is_authenticated and request.user.id == profile_user.id %}
+                <a href="/edit-profile/" class="button">✏️ Edit Profile</a>
+            {% endif %}
+
+        </section>
+
+        {% if can_view_posts %}
+
+    <h2 class="section-title">
+        Posts by {{ profile_user.username }}
+    </h2>
+
+    {% for post in user_posts %}
+        <article class="post-card">
+
+            <p class="post-date">
+                {{ post.created_at|date:"M d, Y · H:i" }}
+            </p>
+
+            <p class="post-content">{{ post.content }}</p>
+
+        </article>
+    {% empty %}
+        <div class="empty">
+            No posts yet. Their story starts here. 💜
+        </div>
+    {% endfor %}
+
+{% else %}
+
+    <div class="empty">
+        <h2>🔒 This Account Is Private</h2>
+
+        <p>
+            Follow @{{ profile_user.username }} to view their posts.
+        </p>
+
+        {% if request.user.is_authenticated %}
+            <p>Click the Follow button above to continue.</p>
+        {% else %}
+            <a href="/login/" class="button">Log in to continue</a>
+        {% endif %}
+    </div>
+
+{% endif %}
+    </div>
+
+</body>
+</html>

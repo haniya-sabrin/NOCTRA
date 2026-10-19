@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | NOCTRA</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #09090f;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #292239;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: #c4a1ff;
+            font-size: 28px;
+        }
+
+        .back {
+            color: #c4a1ff;
+            text-decoration: none;
+            border: 1px solid #8054c7;
+            padding: 9px 14px;
+            border-radius: 8px;
+        }
+
+        .back:hover {
+            background: #241638;
+        }
+
+        .notification {
+            background: #14121e;
+            border: 1px solid #302444;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 14px;
+            transition: 0.2s;
+        }
+
+        .notification:hover {
+            border-color: #a56bff;
+            transform: translateY(-2px);
+        }
+
+        .message {
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .time {
+            color: #a39ab5;
+            font-size: 12px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 50px 20px;
+            background: #14121e;
+            border-radius: 12px;
+            border: 1px solid #302444;
+        }
+
+        .empty h2 {
+            color: #c4a1ff;
+            margin-bottom: 12px;
+        }
+
+        .empty p {
+            color: #a39ab5;
+        }
+
+        .icon {
+            font-size: 35px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="header">
+            <h1>🔔 Notifications</h1>
+            <a href="{% url 'feed' %}" class="back">← Back to Feed</a>
+        </div>
+
+        {% for notification in notifications %}
+            <div class="notification">
+                <div class="message">
+                    {% if notification.notification_type == 'like' %}
+                        💜 {{ notification.message }}
+                    {% elif notification.notification_type == 'follow' %}
+                        👤 {{ notification.message }}
+                    {% else %}
+                        🔔 {{ notification.message }}
+                    {% endif %}
+                </div>
+
+                <div class="time">
+                    {{ notification.created_at|date:"d M Y, h:i A" }}
+                </div>
+            </div>
+        {% empty %}
+            <div class="empty">
+                <div class="icon">🌙</div>
+                <h2>It's quiet in NOCTRA...</h2>
+                <p>Your notifications will appear here when someone interacts with you.</p>
+            </div>
+        {% endfor %}
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | NOCTRA</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #090711;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 450px;
+            padding: 35px;
+            background: #151122;
+            border: 1px solid #6c35c5;
+            border-radius: 18px;
+            box-shadow: 0 0 25px #6c35c533;
+        }
+
+        h1 {
+            text-align: center;
+            color: #bb86fc;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 8px;
+            color: #d8c6ff;
+        }
+
+        input[type="file"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background: #0d0a16;
+            border: 1px solid #49346b;
+            border-radius: 8px;
+            color: white;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #8b45e9;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #a66aff;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #bb86fc;
+            text-decoration: none;
+        }
+
+        .error {
+            color: #ff7777;
+            text-align: center;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 15px auto;
+            border: 2px solid #bb86fc;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>NOCTRA</h1>
+        <p class="subtitle">Customize your identity.</p>
+
+        <h2>Edit Profile</h2>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        {% if profile.profile_picture and profile.profile_picture.name != "profile_pictures/default.png" %}
+            <img
+                src="{{ profile.profile_picture.url }}"
+                alt="Profile picture"
+                class="profile-pic"
+            >
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label for="profile_picture">Profile Picture</label>
+            <input
+                type="file"
+                id="profile_picture"
+                name="profile_picture"
+                accept="image/*"
+            >
+
+            <label for="bio">Your Bio</label>
+            <textarea
+                id="bio"
+                name="bio"
+                maxlength="300"
+                placeholder="Tell the world about yourself..."
+            >{{ profile.bio }}</textarea>
+
+            <button type="submit">Save Changes</button>
+        </form>
+
+        <a href="/feed/" class="back">← Back to Feed</a>
+
+    </div>
+
+</body>
+</html>

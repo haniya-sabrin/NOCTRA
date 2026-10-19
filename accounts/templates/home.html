@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NOCTRA | Your World. Your People.</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #08080d;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        nav {
+            height: 80px;
+            padding: 0 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #252530;
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: #b58cff;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: #d4d4df;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            color: #b58cff;
+        }
+
+        .signup {
+            background: #a970ff;
+            color: #08080d !important;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .badge {
+            border: 1px solid #62418e;
+            color: #c5a4ff;
+            padding: 9px 18px;
+            border-radius: 30px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: clamp(48px, 8vw, 88px);
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+        }
+
+        h1 span {
+            color: #b58cff;
+        }
+
+        .description {
+            color: #a6a6b8;
+            font-size: 17px;
+            line-height: 1.8;
+            max-width: 570px;
+            margin-bottom: 35px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .primary {
+            background: #a970ff;
+            color: #08080d;
+        }
+
+        .secondary {
+            border: 1px solid #414151;
+            color: #ffffff;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            opacity: 0.85;
+        }
+
+        .features {
+            padding: 30px 8% 70px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: #111119;
+            border: 1px solid #252530;
+            border-radius: 14px;
+            padding: 28px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 12px;
+            color: #c5a4ff;
+        }
+
+        .feature-card p {
+            color: #9999ad;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #777789;
+            border-top: 1px solid #252530;
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+            nav {
+                padding: 0 5%;
+            }
+
+            .logo {
+                font-size: 23px;
+                letter-spacing: 3px;
+            }
+
+            .nav-links {
+                gap: 12px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                letter-spacing: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">NOCTRA</div>
+
+        <div class="nav-links">
+            <a href="#features">Explore</a>
+          {% if user.is_authenticated %}
+
+    <h3>Welcome to NOCTRA, {{ user.username }}! 🖤</h3>
+
+    <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+    {% csrf_token %}
+    <button type="submit" style="
+        background: #a970ff;
+        color: #08080c;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: 15px;
+    ">
+        Log Out
+    </button>
+</form>
+
+{% else %}
+
+    <a href="{% url 'login' %}">Log In</a>
+    <a href="{% url 'register' %}">Register</a>
+
+{% endif %}
+        </div>
+    </nav>
+
+    <section class="hero">
+
+        <div class="badge">YOUR SPACE. YOUR COMMUNITY.</div>
+
+        <h1>WELCOME TO <span>NOCTRA</span></h1>
+
+        <p class="description">
+            A space to express yourself, share your moments,
+            discover new perspectives, and connect with people
+            who make your world more interesting.
+        </p>
+
+        <div class="buttons">
+            <a href="/register/" class="button primary">
+                Create Your Account →
+            </a>
+
+            <a href="#features" class="button secondary">
+                Discover NOCTRA
+            </a>
+        </div>
+
+    </section>
+
+    <section class="features" id="features">
+
+        <div class="feature-card">
+            <h3>✦ Express Yourself</h3>
+            <p>
+                Share your thoughts, publish posts, and let
+                your personality shine through your profile.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h3>♡ Build Connections</h3>
+            <p>
+                Find people, follow their journeys, and create
+                meaningful connections with your community.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h3>◈ Discover More</h3>
+            <p>
+                Explore ideas, interact with posts, and discover
+                new perspectives from people around you.
+            </p>
+        </div>
+
+    </section>
+
+    <footer>
+        © 2026 NOCTRA. Your world. Your people. Your space.
+    </footer>
+
+</body>
+</html>

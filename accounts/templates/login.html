@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | NOCTRA</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #08080d;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            background: #111119;
+            border: 1px solid #302541;
+            border-radius: 18px;
+        }
+
+        .logo {
+            text-align: center;
+            color: #b58cff;
+            font-size: 30px;
+            font-weight: bold;
+            letter-spacing: 6px;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 25px 0 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #9999ad;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 8px;
+            font-size: 13px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            background: #090910;
+            border: 1px solid #353545;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #b58cff;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #a970ff;
+            color: #08080d;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .bottom {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 13px;
+            color: #9999ad;
+        }
+
+        a {
+            color: #c5a4ff;
+            text-decoration: none;
+        }
+
+        .error {
+            color: #ff8b9a;
+            font-size: 13px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="logo">NOCTRA</div>
+
+        <h2>Welcome Back</h2>
+
+        <p class="subtitle">
+            Your world is waiting for you.
+        </p>
+
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <label for="username">Username</label>
+
+            <input
+                type="text"
+                id="username"
+                name="username"
+                autocomplete="username"
+                required
+            >
+
+            <label for="password">Password</label>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                autocomplete="current-password"
+                required
+            >
+
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+
+            <button type="submit">Log In →</button>
+
+        </form>
+
+        <p class="bottom">
+            New to NOCTRA?
+            <a href="{% url 'register' %}">Create an account</a>
+        </p>
+
+    </div>
+
+</body>
+</html>

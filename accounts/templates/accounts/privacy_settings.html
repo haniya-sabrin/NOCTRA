@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Privacy Settings | NOCTRA</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #0b0614;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: #170e25;
+            border: 1px solid #392052;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.15);
+        }
+
+        h1 {
+            color: #c084fc;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #b8acc9;
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        .setting {
+            background: #211532;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 22px;
+        }
+
+        .setting label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #a855f7;
+            cursor: pointer;
+        }
+
+        .description {
+            color: #b8acc9;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-top: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #9333ea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #a855f7;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            color: #c084fc;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Privacy Settings</h1>
+
+        <p class="subtitle">
+            Your privacy, your choice.
+            Manage who can view your NOCTRA profile and posts.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="setting">
+
+                <label for="is_private">
+                    <span>🔒 Private Account</span>
+
+                    <input
+                        type="checkbox"
+                        id="is_private"
+                        name="is_private"
+                        {% if profile.is_private %}checked{% endif %}
+                    >
+                </label>
+
+                <p class="description">
+                    Enable this option to make your account private.
+                    Only you and your approved followers should be able
+                    to access your posts.
+                </p>
+
+            </div>
+
+            <button type="submit">
+                Save Privacy Settings
+            </button>
+
+        </form>
+
+        <a href="/" class="back">← Back to Home</a>
+
+    </div>
+
+</body>
+</html>

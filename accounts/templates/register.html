@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Join NOCTRA</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #08080d;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            background: #111119;
+            border: 1px solid #302541;
+            border-radius: 18px;
+            box-shadow: 0 0 35px #a970ff12;
+        }
+
+        .logo {
+            color: #b58cff;
+            font-size: 30px;
+            font-weight: bold;
+            letter-spacing: 6px;
+            text-align: center;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 25px 0 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #9999ad;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin: 17px 0 8px;
+            color: #d4d4df;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            background: #090910;
+            border: 1px solid #353545;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #b58cff;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #a970ff;
+            color: #08080d;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .bottom {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 13px;
+            color: #9999ad;
+        }
+
+        a {
+            color: #c5a4ff;
+            text-decoration: none;
+        }
+
+        .errors {
+            color: #ff8b9a;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="logo">NOCTRA</div>
+
+        <h2>Create your account</h2>
+
+        <p class="subtitle">
+            Your world. Your people. Your space.
+        </p>
+
+        <form method="POST" action="/register/">
+            {% csrf_token %}
+
+            <label for="username">Username</label>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                maxlength="150"
+                autocomplete="username"
+                required
+            >
+
+            <label for="email">Email address</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                autocomplete="email"
+                required
+            >
+
+            <label for="password1">Password</label>
+            <input
+                type="password"
+                id="password1"
+                name="password1"
+                autocomplete="new-password"
+                required
+            >
+
+            <label for="password2">Confirm password</label>
+            <input
+                type="password"
+                id="password2"
+                name="password2"
+                autocomplete="new-password"
+                required
+            >
+
+            {% if errors %}
+                <div class="errors">
+                    {% for error in errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <button type="submit">Create Account →</button>
+
+        </form>
+
+        <p class="bottom">
+            Already a member?
+            <a href="/login/">Log in</a>
+        </p>
+
+    </div>
+
+</body>
+</html>
